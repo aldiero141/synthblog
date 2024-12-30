@@ -1,9 +1,16 @@
-import { Flex, Card, Row, Col, Typography } from "antd";
+import { Flex, Card, Row, Col, Typography, Skeleton } from "antd";
 import { dummyPostData } from "utils/dummy";
+import { useState } from "react";
 
 const { Title } = Typography;
 
 export default function Home() {
+  const [loading, setLoading] = useState<Boolean>(true);
+
+  setTimeout(() => {
+    setLoading(false);
+  }, 2000);
+
   return (
     <>
       <Flex
@@ -13,7 +20,6 @@ export default function Home() {
         style={{
           height: "100%",
           margin: "1em",
-          textAlign: "center",
         }}
       >
         <Title style={{ margin: "0, 1em" }}> Home </Title>
@@ -22,13 +28,23 @@ export default function Home() {
           gutter={[24, 24]}
           className="w-full sm:w-[20em] md:w-[40em] lg:w-full"
         >
-          {dummyPostData.map((post) => (
-            <Col key={post.id} xs={24} md={12} lg={8}>
-              <Card title={post.title} style={{ minHeight: "16em" }}>
-                {post.body}
-              </Card>
-            </Col>
-          ))}
+          {loading &&
+            dummyPostData.map((post) => (
+              <Col key={post.id} xs={24} md={12} lg={8}>
+                <Card className="min-h-[20em]">
+                  <Skeleton paragraph={{ rows: 6 }} />
+                </Card>
+              </Col>
+            ))}
+
+          {!loading &&
+            dummyPostData.map((post) => (
+              <Col key={post.id} xs={24} md={12} lg={8}>
+                <Card className="min-h-[20em]" title={post.title}>
+                  {post.body}
+                </Card>
+              </Col>
+            ))}
         </Row>
       </Flex>
     </>
