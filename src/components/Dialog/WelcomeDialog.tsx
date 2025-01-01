@@ -1,6 +1,7 @@
 "use client";
 import { Modal, Typography, Button, Form, Input, message } from "antd";
 import type { IConfirmationProps } from "~/models/component";
+import { useUserState } from "~/store/user";
 
 const validateMessages = {
   required: "${label} is required!",
@@ -25,10 +26,11 @@ interface IFormValues {
 
 export default function WelcomeDialog(props: IConfirmationProps) {
   const [form] = Form.useForm();
+  const { setData } = useUserState();
 
   const onFinish = (values: IFormValues) => {
     message.success(`Login success! Welcome ${values.name}!!`);
-    console.log(values);
+    setData(values);
     props.onConfirm();
   };
 

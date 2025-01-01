@@ -46,7 +46,12 @@ export default function DetailsPage() {
         <Text>Are you sure you want to delete this post?</Text>
       </Confirmation>
 
-      <Flex vertical justify="center" align="center" className="m-1 h-full">
+      <Flex
+        vertical
+        justify="center"
+        align="center"
+        className="m-1 my-8 h-full"
+      >
         <Flex
           justify="center"
           className="gap m-4 -ml-8 sm:-ml-4 md:-ml-4 lg:-ml-8"

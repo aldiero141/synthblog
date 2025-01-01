@@ -1,13 +1,22 @@
-import { Layout, Typography, Flex } from "antd";
+import { Layout, Typography, Flex, theme } from "antd";
 import Image from "next/image";
+import { useUserState } from "~/store/user";
 
 const { Header } = Layout;
 const { Title, Text } = Typography;
 
 export default function header() {
+  const { data } = useUserState();
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken();
+
   return (
     <>
-      <Header className="flex items-center justify-between">
+      <Header
+        className="flex items-center justify-between border-b border-b-slate-200"
+        style={{ background: colorBgContainer }}
+      >
         <Flex
           align="center"
           className="cursor-pointer"
@@ -26,7 +35,7 @@ export default function header() {
         </Flex>
 
         <Flex align="center">
-          <Text>Welcome, User!</Text>
+          <Text>Welcome, {data?.name || "User"}!</Text>
         </Flex>
       </Header>
     </>
