@@ -1,7 +1,7 @@
 import React from "react";
 import Confirmation from "~/components/Dialog/Confirmation";
 import { useState } from "react";
-import { Typography, Flex, Button } from "antd";
+import { Typography, Flex, Button, message } from "antd";
 import { useRouter } from "next/router";
 import { dummyPostDetail, dummyUser, dummyComments } from "~/utils/dummy";
 import { EditOutlined, DeleteOutlined, LeftOutlined } from "@ant-design/icons";
@@ -19,8 +19,10 @@ export default function DetailsPage() {
   // const [loading, setLoading] = useState<boolean>(true);
   const [openConfirmationDialog, setOpenConfirmationDialog] =
     useState<boolean>(false);
-  const onConfirmConfirmationDialog = () => {
+  const onDeletePost = () => {
+    message.success(`Delete post success!`);
     setOpenConfirmationDialog(false);
+    router.push("/");
   };
 
   return (
@@ -38,7 +40,7 @@ export default function DetailsPage() {
           setOpenConfirmationDialog(false);
         }}
         onConfirm={() => {
-          onConfirmConfirmationDialog();
+          onDeletePost();
         }}
       >
         <Text>Are you sure you want to delete this post?</Text>

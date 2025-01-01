@@ -57,7 +57,9 @@ export default function WelcomeDialog(props: IConfirmationProps) {
           share your thoughts and ideas with the world, and engage with other
           users.
         </Paragraph>
-        <Paragraph>To Enter, Please Enter Your Name & Credentials</Paragraph>
+        <Paragraph>
+          Please Enter Your Name & Credentials To Enter the Platform
+        </Paragraph>
 
         <Form
           form={form}
