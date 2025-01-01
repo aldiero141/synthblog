@@ -20,6 +20,7 @@ export default function Home() {
   return (
     <>
       <WelcomeDialog
+        key="welcome-dialog"
         open={openWelcomeDialog}
         onConfirm={() => {
           onConfirmWelcomeDialog();

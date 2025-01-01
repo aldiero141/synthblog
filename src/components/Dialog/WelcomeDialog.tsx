@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { Modal, Typography, Button, Form, Input, message } from "antd";
 import type { IConfirmationProps } from "~/models/component";
 

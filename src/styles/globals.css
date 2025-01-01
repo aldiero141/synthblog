@@ -23,7 +23,7 @@ body {
 }
 
 .post-container {
-  @apply mx-[20em] w-[80vw] sm:w-[80vw] md:w-[80vw] lg:w-[50vw] !important;
+  @apply w-[80vw] sm:w-[80vw] md:w-[80vw] lg:w-[50vw] !important;
 }
 .post-card {
   @apply min-h-[10em] !important;
