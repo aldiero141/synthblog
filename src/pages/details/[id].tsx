@@ -19,10 +19,10 @@ export default function DetailsPage() {
   // const [loading, setLoading] = useState<boolean>(true);
   const [openConfirmationDialog, setOpenConfirmationDialog] =
     useState<boolean>(false);
-  const onDeletePost = () => {
+  const onDeletePost = async () => {
     message.success(`Delete post success!`);
     setOpenConfirmationDialog(false);
-    router.push("/");
+    await router.push("/");
   };
 
   return (

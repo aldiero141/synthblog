@@ -1,6 +1,6 @@
 "use client";
 import { Modal, Button, Form, Input, message } from "antd";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import type { ICreatePostProps } from "~/models/component";
 
 const validateMessages = {
@@ -27,20 +27,23 @@ export default function CreateUpdatePost(props: ICreatePostProps) {
   const [form] = Form.useForm();
 
   const onFinish = (values: IFormValues) => {
-    props.type === "create" ? onCreatePost(values) : onUpdatePost(values);
-    props.onConfirm();
+    return props.type === "create"
+      ? onCreatePost(values)
+      : onUpdatePost(values);
   };
 
   const onCreatePost = (values: IFormValues) => {
     message.success(`Create post success!`);
     console.log(values);
     onResetField();
+    return props.onConfirm();
   };
 
   const onUpdatePost = (values: IFormValues) => {
     message.success(`Update post success!`);
     console.log(values);
     onResetField();
+    return props.onConfirm();
   };
 
   const onResetField = () => {
@@ -55,14 +58,14 @@ export default function CreateUpdatePost(props: ICreatePostProps) {
     message.error(`Please check your field input!`);
   };
 
-  useEffect(() => {
-    if (props.type === "update") {
-      form.setFieldsValue({
-        title: "Edited Title",
-        body: "Edited body lorem ipsum dolor sit amet",
-      });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (props.type === "update") {
+  //     form.setFieldsValue({
+  //       title: "Edited Title",
+  //       body: "Edited body lorem ipsum dolor sit amet",
+  //     });
+  //   }
+  // }, []);
 
   return (
     <>
