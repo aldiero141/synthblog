@@ -16,6 +16,7 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.5.2",
     "@t3-oss/env-nextjs": "^0.10.1",
     "antd": "^5.22.7",
     "axios": "^1.7.9",

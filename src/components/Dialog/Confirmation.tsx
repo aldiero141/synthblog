@@ -6,15 +6,13 @@ export default function Confirmation(props: IConfirmationProps) {
   return (
     <>
       <Modal
-        title="Modal"
+        title="Delete Post?"
         open={props.open}
         onOk={props.onConfirm}
         onCancel={props.onCancel}
-        okText="Confirm"
-        cancelText="Cancel"
         footer={[
           <Button key="back" onClick={props.onCancel}>
-            Return
+            Cancel
           </Button>,
           <Button danger type="primary" key="submit" onClick={props.onConfirm}>
             Delete

@@ -9,15 +9,7 @@ export default function Posts({ loading }: { loading: boolean }) {
   const router = useRouter();
   return (
     <>
-      <Flex
-        vertical
-        justify="center"
-        align="center"
-        style={{
-          height: "100%",
-          margin: "1em",
-        }}
-      >
+      <Flex vertical justify="center" align="center" className="m-1 h-full">
         <Title style={{ margin: "0, 1em" }}> Home </Title>
 
         <Flex vertical gap={12} className="post-container">

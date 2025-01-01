@@ -62,3 +62,35 @@ export const dummyPostData = [
     body: "Canonicus defaeco suppono. Tyrannus sapiente est. Tergeo verus calamitas. Defaeco audax deduco. Ullam coadunatio degusto. Adamo delectatio convoco. Adficio consuasor suus. Cavus supplanto vacuus. Comitatus et nemo. Et eum triduana. Alii tertius conscendo. Voluptatum thesaurus nam. Voco causa charisma. Quasi vinum arbor. Testimonium et aptus. Capitulus ulterius utique. Abduco assumenda omnis. Comptus doloribus consequatur.",
   },
 ];
+
+export const dummyPostDetail = {
+  id: 184663,
+  user_id: 7609179,
+  title: "Quia thymum totam aspernatur sperno.",
+  body: "Accusantium porro quae. Vix conscendo sumo. Censura aggredior debilito. Vigor vado sustineo. Abstergo vulgo subiungo. Sapiente conduco adinventitias. Textilis apto ventito. Atque adsuesco subito. Annus titulus quo. Succurro eligendi creo. Comprehendo ipsa synagoga. Voluptatum tremo harum. Solitudo valens casus.",
+}
+
+export const dummyUser = {
+  id: 6945143,
+  name: "Amb. Bishnu Naik",
+  email: "naik_amb_bishnu@krajcik-breitenberg.test",
+  gender: "female",
+  status: "inactive"
+}
+
+export const dummyComments = [
+  {
+    id: 101211,
+    post_id: 130992,
+    name: "Mr. Shrishti Embranthiri",
+    email: "embranthiri_shrishti_mr@pollich-schulist.test",
+    body: "Sunt pariatur et."
+  },
+  {
+    id: 101210,
+    post_id: 130992,
+    name: "Msgr. Gopal Khanna",
+    email: "msgr_khanna_gopal@gleichner.example",
+    body: "Rerum sunt voluptatum."
+  }
+]
