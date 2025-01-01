@@ -39,8 +39,8 @@ export default function DetailsPage() {
         onCancel={() => {
           setOpenConfirmationDialog(false);
         }}
-        onConfirm={() => {
-          onDeletePost();
+        onConfirm={async () => {
+          await onDeletePost();
         }}
       >
         <Text>Are you sure you want to delete this post?</Text>

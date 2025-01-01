@@ -97,7 +97,7 @@ export default function Posts({ loading }: { loading: boolean }) {
                 className="post-card"
                 title={post.title}
                 key={post.id}
-                onClick={async () => await router.push(`/details/${post.id}`)}
+                onClick={() => router.push(`/details/${post.id}`)}
               >
                 <Flex vertical justify="space-between" gap={16}>
                   {post.body}
