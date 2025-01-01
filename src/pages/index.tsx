@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import WelcomeDialog from "~/components/Dialog/WelcomeDialog";
 import Posts from "~/components/posts";
-import { useUserState } from "~/store/user";
+import { UserState } from "~/store/user";
 
 export default function Home() {
   const [loading, setLoading] = useState<boolean>(true);
   const [openWelcomeDialog, setOpenWelcomeDialog] = useState<boolean>(false);
-  const { data: userData } = useUserState();
+  const { data: userData } = UserState();
 
   const onConfirmWelcomeDialog = () => {
     setOpenWelcomeDialog(false);

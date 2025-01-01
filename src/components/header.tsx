@@ -1,12 +1,12 @@
 import { Layout, Typography, Flex, theme } from "antd";
 import Image from "next/image";
-import { useUserState } from "~/store/user";
+import { UserState } from "~/store/user";
 
 const { Header } = Layout;
 const { Title, Text } = Typography;
 
 export default function header() {
-  const { data } = useUserState();
+  const { data } = UserState();
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -35,7 +35,7 @@ export default function header() {
         </Flex>
 
         <Flex align="center">
-          <Text>Welcome, {data?.name || "User"}!</Text>
+          <Text>Welcome, {data?.name ?? "User"}!</Text>
         </Flex>
       </Header>
     </>

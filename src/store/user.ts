@@ -5,7 +5,7 @@ type UserState = {
     token: string;
 }
 
-export const useUserState = createGlobalStore<UserState>('user', {
+export const UserState = createGlobalStore<UserState>('user', {
     name: '',
     token: '',
 })

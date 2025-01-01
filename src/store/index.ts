@@ -18,11 +18,11 @@ export function createGlobalStore<T>(queryKey: unknown, initialData: T | null = 
         queryClient.setQueryData([queryKey], data)
     }
 
-    function resetData() {
-        queryClient.invalidateQueries({
+    async function resetData() {
+       await queryClient.invalidateQueries({
             queryKey: [queryKey],
         })
-        queryClient.refetchQueries({
+       await queryClient.refetchQueries({
             queryKey: [queryKey],
         })
     }
