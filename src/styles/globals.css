@@ -1,3 +1,8 @@
+@layer tailwind-base, antd;
+@layer tailwind-base {
+  @tailwind base;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -15,4 +20,11 @@ body {
   padding: 0;
   width: 100vw;
   min-height: 100vh;
+}
+
+.post-container {
+  @apply mx-[20em] w-[80vw] sm:w-[80vw] md:w-[80vw] lg:w-[50vw] !important;
+}
+.post-card {
+  @apply min-h-[10em] !important;
 }

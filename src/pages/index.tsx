@@ -1,52 +1,32 @@
-import { Flex, Card, Row, Col, Typography, Skeleton } from "antd";
-import { dummyPostData } from "utils/dummy";
-import { useState } from "react";
-
-const { Title } = Typography;
+import { useEffect, useState } from "react";
+import WelcomeDialog from "~/components/Dialog/WelcomeDialog";
+import Posts from "~/components/posts";
 
 export default function Home() {
-  const [loading, setLoading] = useState<Boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [openWelcomeDialog, setOpenWelcomeDialog] = useState<boolean>(false);
 
-  setTimeout(() => {
+  const onConfirmWelcomeDialog = () => {
+    setOpenWelcomeDialog(false);
     setLoading(false);
-  }, 2000);
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setOpenWelcomeDialog(true);
+    }, 200);
+  }, []);
 
   return (
     <>
-      <Flex
-        vertical
-        justify="center"
-        align="center"
-        style={{
-          height: "100%",
-          margin: "1em",
+      <WelcomeDialog
+        open={openWelcomeDialog}
+        onConfirm={() => {
+          onConfirmWelcomeDialog();
         }}
-      >
-        <Title style={{ margin: "0, 1em" }}> Home </Title>
+      />
 
-        <Row
-          gutter={[24, 24]}
-          className="w-full sm:w-[20em] md:w-[40em] lg:w-full"
-        >
-          {loading &&
-            dummyPostData.map((post) => (
-              <Col key={post.id} xs={24} md={12} lg={8}>
-                <Card className="min-h-[20em]">
-                  <Skeleton paragraph={{ rows: 6 }} />
-                </Card>
-              </Col>
-            ))}
-
-          {!loading &&
-            dummyPostData.map((post) => (
-              <Col key={post.id} xs={24} md={12} lg={8}>
-                <Card className="min-h-[20em]" title={post.title}>
-                  {post.body}
-                </Card>
-              </Col>
-            ))}
-        </Row>
-      </Flex>
+      <Posts loading={loading} />
     </>
   );
 }
