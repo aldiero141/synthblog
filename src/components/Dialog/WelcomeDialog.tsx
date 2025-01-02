@@ -29,8 +29,10 @@ export default function WelcomeDialog(props: IConfirmationProps) {
   const { setData } = UserState();
 
   const onFinish = (values: IFormValues) => {
-    message.success(`Login success! Welcome ${values.name}!!`);
     setData(values);
+    localStorage.setItem("user", JSON.stringify(values));
+
+    message.success(`Login success! Welcome ${values.name}!!`);
     props.onConfirm();
   };
 

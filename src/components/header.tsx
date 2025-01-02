@@ -1,5 +1,6 @@
 import { Layout, Typography, Flex, theme } from "antd";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { UserState } from "~/store/user";
 
 const { Header } = Layout;
@@ -7,6 +8,8 @@ const { Title, Text } = Typography;
 
 export default function header() {
   const { data } = UserState();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const router = useRouter();
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -20,7 +23,7 @@ export default function header() {
         <Flex
           align="center"
           className="cursor-pointer"
-          onClick={() => (window.location.href = "/")}
+          onClick={() => router.push("/")}
         >
           <Image
             src="/react.png"
@@ -35,7 +38,7 @@ export default function header() {
         </Flex>
 
         <Flex align="center">
-          <Text>Welcome, {data?.name ?? "User"}!</Text>
+          <Text>Welcome, {data?.name ? data?.name : "User"}!</Text>
         </Flex>
       </Header>
     </>
