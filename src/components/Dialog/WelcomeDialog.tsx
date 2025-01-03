@@ -76,12 +76,11 @@ export default function WelcomeDialog(props: IConfirmationProps) {
     form.resetFields();
   };
 
-  // TODO: Remove this later
   useEffect(() => {
     form.setFieldsValue({
-      name: "matcha latte",
-      gender: "male",
-      email: "matchalatte@email.com",
+      name: "",
+      gender: "",
+      email: "",
       token: "8a347337330e9f0373e9743af5dbbe6e0063e2916e2c57422e33ffc336b4b748",
     });
   }, []);
