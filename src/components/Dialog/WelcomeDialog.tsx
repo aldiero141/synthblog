@@ -1,6 +1,7 @@
 "use client";
 import { Modal, Typography, Button, Form, Input, message } from "antd";
-import type { IConfirmationProps } from "~/models/component";
+import { useEffect } from "react";
+import type { IConfirmationProps, IUserCredentials } from "~/models/component";
 import { UserState } from "~/store/user";
 
 const validateMessages = {
@@ -19,16 +20,11 @@ const validateMessages = {
 
 const { Title, Paragraph } = Typography;
 
-interface IFormValues {
-  name: string;
-  token: string;
-}
-
 export default function WelcomeDialog(props: IConfirmationProps) {
   const [form] = Form.useForm();
   const { setData } = UserState();
 
-  const onFinish = (values: IFormValues) => {
+  const onFinish = (values: IUserCredentials) => {
     setData(values);
     localStorage.setItem("user", JSON.stringify(values));
 
@@ -39,6 +35,14 @@ export default function WelcomeDialog(props: IConfirmationProps) {
   const onFinishFailed = () => {
     message.error(`Please check your input!`);
   };
+
+  // TODO: Remove this later
+  useEffect(() => {
+    form.setFieldsValue({
+      name: "name",
+      token: "8a347337330e9f0373e9743af5dbbe6e0063e2916e2c57422e33ffc336b4b748",
+    });
+  }, []);
 
   return (
     <>

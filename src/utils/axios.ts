@@ -45,6 +45,9 @@ axiosInstance.interceptors.response.use(
       // Logic to redirect to login or refresh token
       window.location.href = '/401';
     }
+    if (error.response?.status === 404  ) {
+      return
+    }
     localStorage.clear();
     console.error('Response error', error);
     return Promise.reject(error);

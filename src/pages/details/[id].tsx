@@ -6,13 +6,59 @@ import { useRouter } from "next/router";
 import { dummyPostDetail, dummyUser, dummyComments } from "~/utils/dummy";
 import { EditOutlined, DeleteOutlined, LeftOutlined } from "@ant-design/icons";
 import CreateUpdatePost from "~/components/Dialog/CreateUpdatePost";
+import { useQuery } from "@tanstack/react-query";
+import axiosInstance from "~/utils/axios";
+import { IComment, IPost, IUser } from "~/models/post";
 
 const { Title, Text } = Typography;
 
 export default function DetailsPage() {
   // WIP - Get Details and Get User
   const router = useRouter();
-  console.log(router.query.id);
+  const postId = router.query.id;
+
+  const { data: postsDetails, isLoading: isLoadingDetails } = useQuery({
+    queryKey: ["posts-details", postId],
+    queryFn: async () => {
+      const data = await axiosInstance
+        .get(`/posts/${postId as string}`)
+        .then((res) => {
+          return res.data as IPost;
+        });
+      return data;
+    },
+    enabled: !!postId,
+  });
+
+  const { data: comments, isLoading: isLoadingComment } = useQuery({
+    queryKey: ["comments", postId],
+    queryFn: async () => {
+      const data = await axiosInstance
+        .get(`/posts/${postId as string}/comments`)
+        .then((res) => {
+          return res.data as IComment[];
+        });
+      return data;
+    },
+    enabled: !!postId,
+  });
+
+  const { data: poster, isLoading: isLoadingPoster } = useQuery({
+    queryKey: ["poster", postsDetails?.user_id],
+    queryFn: async () => {
+      try {
+        const data = await axiosInstance
+          .get(`/users/${postsDetails?.user_id}`)
+          .then((res) => {
+            return res.data as IUser;
+          });
+        return data;
+      } catch (error) {
+        message.error(`Error: poster's user details not found!`);
+      }
+    },
+    enabled: !!postsDetails?.user_id,
+  });
 
   const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
 
@@ -70,14 +116,15 @@ export default function DetailsPage() {
           >
             <Flex justify="space-between" className="mb-4 w-full text-center">
               <Title level={2} className="m-0 p-0">
-                {dummyPostDetail.title}
+                {postsDetails?.title}
               </Title>
             </Flex>
 
             <Text className="mb-8 ml-2 text-left">
-              Posted By <b>{dummyUser.name}</b>
+              Posted By{" "}
+              <b>{poster?.name ? poster?.name : postsDetails?.user_id}</b>
             </Text>
-            <Text className="text-left">{dummyPostDetail.body}</Text>
+            <Text className="text-left">{postsDetails?.body}</Text>
 
             <Flex className="mt-8 self-end" gap={16}>
               <EditOutlined
@@ -97,20 +144,33 @@ export default function DetailsPage() {
             Comments
           </Title>
 
-          {dummyComments.length > 0 &&
-            dummyComments.map((comment) => (
-              <Flex
-                vertical
-                justify="center"
-                key={comment.id}
-                className="h-full w-full border-t border-slate-300 px-4 py-2 last:border-b"
-              >
-                <Text strong className="text-left">
-                  {comment.name} - <Text type="secondary">{comment.email}</Text>
-                </Text>
-                <Text className="text-left">{comment.body}</Text>
-              </Flex>
-            ))}
+          {!comments || comments.length === 0 ? (
+            <Flex
+              vertical
+              justify="center"
+              align="center"
+              className="m-1 my-8 h-full"
+            >
+              <Text type="secondary"> No Comments </Text>
+            </Flex>
+          ) : null}
+
+          {comments
+            ? comments?.map((comment) => (
+                <Flex
+                  vertical
+                  justify="center"
+                  key={comment.id}
+                  className="h-full w-full border-t border-slate-300 px-4 py-2 last:border-b"
+                >
+                  <Text strong className="text-left">
+                    {comment.name} -{" "}
+                    <Text type="secondary">{comment.email}</Text>
+                  </Text>
+                  <Text className="text-left">{comment.body}</Text>
+                </Flex>
+              ))
+            : null}
         </Flex>
       </Flex>
     </>
