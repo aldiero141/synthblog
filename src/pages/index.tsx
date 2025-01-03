@@ -1,36 +1,41 @@
-import { Flex, Card, Row, Col, Typography } from "antd";
-import { dummyPostData } from "utils/dummy";
-
-const { Title } = Typography;
+import { useEffect, useState } from "react";
+import WelcomeDialog from "~/components/Dialog/WelcomeDialog";
+import Posts from "~/components/posts";
+import type { IUserCredentials } from "~/models/component";
+import { UserState } from "~/store/user";
 
 export default function Home() {
+  const [openWelcomeDialog, setOpenWelcomeDialog] = useState<boolean>(false);
+
+  const onConfirmWelcomeDialog = () => {
+    setOpenWelcomeDialog(false);
+  };
+
+  const { data: userCredential, setData: setUser } = UserState();
+
+  useEffect(() => {
+    const userStorage = localStorage.getItem("user");
+    const localStorageUser = JSON.parse(
+      userStorage ? userStorage : "{}",
+    ) as IUserCredentials;
+    if (userCredential?.token) return;
+    if (localStorageUser?.token) return setUser(localStorageUser);
+    setOpenWelcomeDialog(true);
+  }, []);
+
   return (
     <>
-      <Flex
-        vertical
-        justify="center"
-        align="center"
-        style={{
-          height: "100%",
-          margin: "1em",
-          textAlign: "center",
-        }}
-      >
-        <Title style={{ margin: "0, 1em" }}> Home </Title>
+      <div className="mt-8">
+        <WelcomeDialog
+          key="welcome-dialog"
+          open={openWelcomeDialog}
+          onConfirm={() => {
+            onConfirmWelcomeDialog();
+          }}
+        />
 
-        <Row
-          gutter={[24, 24]}
-          className="w-full sm:w-[20em] md:w-[40em] lg:w-full"
-        >
-          {dummyPostData.map((post) => (
-            <Col key={post.id} xs={24} md={12} lg={8}>
-              <Card title={post.title} style={{ minHeight: "16em" }}>
-                {post.body}
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      </Flex>
+        <Posts />
+      </div>
     </>
   );
 }
