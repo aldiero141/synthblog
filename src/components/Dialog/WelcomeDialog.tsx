@@ -92,12 +92,17 @@ export default function WelcomeDialog(props: IConfirmationProps) {
         closable={false}
         open={props.open}
         footer={[
-          <Button form="welcome-form" key="submit" htmlType="submit">
+          <Button
+            form="welcome-form"
+            key="submit"
+            htmlType="submit"
+            data-testid="cy-welcome-submit"
+          >
             Submit
           </Button>,
         ]}
       >
-        <Title>Welcome to SynthBlog</Title>
+        <Title data-testid="cy-welcome-title">Welcome to SynthBlog</Title>
         <Paragraph>
           SynthBlog is a blogging platform that allows you to create and share
           your thoughts and ideas with the world.
@@ -125,7 +130,10 @@ export default function WelcomeDialog(props: IConfirmationProps) {
             label="Name"
             rules={[{ required: true }, { pattern: /^[a-zA-Z ]*$/ }]}
           >
-            <Input placeholder="Please enter your name" />
+            <Input
+              data-testid="cy-welcome-name"
+              placeholder="Please enter your name"
+            />
           </Form.Item>
 
           <Form.Item
@@ -133,13 +141,23 @@ export default function WelcomeDialog(props: IConfirmationProps) {
             label="Email"
             rules={[{ required: true, type: "email" }]}
           >
-            <Input placeholder="Please enter your email" />
+            <Input
+              data-testid="cy-welcome-email"
+              placeholder="Please enter your email"
+            />
           </Form.Item>
 
           <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
-            <Radio.Group>
-              <Radio value={"male"}>Male</Radio>
-              <Radio value={"female"}>Female</Radio>
+            <Radio.Group
+              className="gender-radio"
+              data-testid="cy-welcome-gender"
+            >
+              <Radio data-testid="cy-welcome-gender-male" value={"male"}>
+                Male
+              </Radio>
+              <Radio data-testid="cy-welcome-gender-female" value={"female"}>
+                Female
+              </Radio>
             </Radio.Group>
           </Form.Item>
 
@@ -152,7 +170,10 @@ export default function WelcomeDialog(props: IConfirmationProps) {
               { min: 16 },
             ]}
           >
-            <Input placeholder="Please enter your go rest token" />
+            <Input
+              data-testid="cy-welcome-token"
+              placeholder="Please enter your go rest token"
+            />
           </Form.Item>
         </Form>
       </Modal>
