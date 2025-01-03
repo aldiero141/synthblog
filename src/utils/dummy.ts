@@ -1,8 +1,8 @@
 export const dummyPostData = [
   {
-    id: 184663,
-    user_id: 7609179,
-    title: "Quia thymum totam aspernatur sperno.",
+    id: 0,
+    user_id: 0,
+    title: "",
     body: "Accusantium porro quae. Vix conscendo sumo. Censura aggredior debilito. Vigor vado sustineo. Abstergo vulgo subiungo. Sapiente conduco adinventitias. Textilis apto ventito. Atque adsuesco subito. Annus titulus quo. Succurro eligendi creo. Comprehendo ipsa synagoga. Voluptatum tremo harum. Solitudo valens casus.",
   },
   {

@@ -12,3 +12,8 @@ export interface ICreatePostProps {
     onCancel?: () => void;
     children?: React.ReactNode;
 }
+
+export interface IUserCredentials {
+    name: string;
+    token: string;
+  }

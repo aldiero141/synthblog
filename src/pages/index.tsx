@@ -4,18 +4,17 @@ import Posts from "~/components/posts";
 import { UserState } from "~/store/user";
 
 export default function Home() {
-  const [loading, setLoading] = useState<boolean>(true);
   const [openWelcomeDialog, setOpenWelcomeDialog] = useState<boolean>(false);
-  const { data: userData } = UserState();
+  const { data: userCredential } = UserState();
 
   const onConfirmWelcomeDialog = () => {
     setOpenWelcomeDialog(false);
-    setLoading(false);
   };
 
   useEffect(() => {
-    if (!userData?.token) setOpenWelcomeDialog(true);
-    else setLoading(false);
+    if (!userCredential?.token) {
+      setOpenWelcomeDialog(true);
+    }
   }, []);
 
   return (
@@ -29,7 +28,7 @@ export default function Home() {
           }}
         />
 
-        <Posts loading={loading} />
+        <Posts />
       </div>
     </>
   );

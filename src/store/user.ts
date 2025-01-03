@@ -1,11 +1,7 @@
 import { createGlobalStore } from './index'
+import type { IUserCredentials } from '../models/component'
 
-type UserState = {
-    name: string;
-    token: string;
-}
-
-export const UserState = createGlobalStore<UserState>('user', {
+export const UserState = createGlobalStore<IUserCredentials>('user', {
     name: '',
     token: '',
 })

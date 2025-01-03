@@ -6,7 +6,6 @@ import {
   Button,
   Input,
   Pagination,
-  message,
 } from "antd";
 import { dummyPostData } from "~/utils/dummy";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -14,50 +13,73 @@ import { FormOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import CreatePost from "~/components/Dialog/CreateUpdatePost";
 import type { GetProps } from "antd";
+import { useQuery } from "@tanstack/react-query";
+import axiosInstance from "~/utils/axios";
+import { UserState } from "~/store/user";
+import type { IPost } from "../models/post";
 
 const { Title, Text } = Typography;
 
 const { Search } = Input;
 type SearchProps = GetProps<typeof Input.Search>;
 
-export default function Posts({ loading }: { loading: boolean }) {
+export default function Posts() {
   const router = useRouter();
+  const { data } = UserState();
   const searchParams = useSearchParams();
-  console.log(searchParams);
+
+  const [page, setPage] = useState<number>(1);
+  const [perPage, setPerPage] = useState<number>(10);
+  const [q, setQ] = useState<string>("");
+  const [totalPost, setTotalPost] = useState<number>(100);
+
+  const { data: posts, isLoading } = useQuery({
+    queryKey: ["posts", page, perPage, q],
+    queryFn: async () => {
+      const data = await axiosInstance
+        .get("/posts", {
+          params: {
+            page: page,
+            per_page: perPage,
+            title: q,
+          },
+        })
+        .then((res) => {
+          setTotalPost(res.headers["x-pagination-total"] as number);
+          return res.data as IPost[];
+        });
+      return data;
+    },
+    enabled: !!data?.token,
+  });
 
   const [openCreatePost, setOpenCreatePost] = useState<boolean>(false);
 
-  // Pagination
-  // WIP - Get Total Page
-  // const [totalPage, setTotalPage] = useState<number>(100);
-
-  interface IParams {
-    page: number;
-    per_page: number;
-    q: string;
-  }
-  const [params, setParams] = useState<IParams>({
-    page: 1,
-    per_page: 10,
-    q: "",
-  });
-
-  const onChangePage = (page: number, pageSize: number) => {
-    setParams({ ...params, page: page, per_page: pageSize });
-    message.success(`Go to page ${page}`);
-    message.success(`per page ${pageSize}`);
+  const onChangePage = (currPage: number, pageSize: number) => {
+    setPage(page);
+    setPerPage(pageSize);
+    router.replace(`?page=${currPage}&per_page=${pageSize}&q=${q}`);
   };
 
   // Search
   const onSearch: SearchProps["onSearch"] = (value, _e, info) => {
-    setParams({ ...params, q: value });
+    setQ(value);
+    setPage(1);
+    setPerPage(10);
+    router.replace(`?page=${page}&per_page=${perPage}&q=${value}`);
   };
 
   useEffect(() => {
-    router.replace(
-      `?q=${params.q}&page=${params.page}&per_page=${params.per_page}`,
-    );
-  }, [params]);
+    if (searchParams.get("page")) {
+      setPage(Number(searchParams.get("page")));
+    }
+    if (searchParams.get("per_page")) {
+      setPerPage(Number(searchParams.get("per_page")));
+    }
+    if (searchParams.get("q")) {
+      setQ(String(searchParams.get("q")));
+    }
+  }, [searchParams]);
 
   return (
     <>
@@ -84,34 +106,53 @@ export default function Posts({ loading }: { loading: boolean }) {
             </Button>
           </Flex>
 
-          {loading &&
+          {isLoading &&
             dummyPostData.map((post) => (
               <Card className="post-card" key={post.id}>
                 <Skeleton paragraph={{ rows: 6 }} />
               </Card>
             ))}
-          {!loading &&
-            dummyPostData.map((post) => (
-              <Card
-                hoverable
-                className="post-card"
-                title={post.title}
-                key={post.id}
-                onClick={() => router.push(`/details/${post.id}`)}
-              >
-                <Flex vertical justify="space-between" gap={16}>
-                  {post.body}
-                  <Text className="cursor-pointer text-right">Read More</Text>
-                </Flex>
-              </Card>
-            ))}
+
+          {!isLoading && (
+            <div>
+              {!posts ||
+                (posts.length > 0 &&
+                  posts.map((post) => (
+                    <Card
+                      hoverable
+                      className="post-card"
+                      title={post.title}
+                      key={post.id}
+                      onClick={() => router.push(`/details/${post.id}`)}
+                    >
+                      <Flex vertical justify="space-between" gap={16}>
+                        {post.body}
+                        <Text className="cursor-pointer text-right">
+                          Read More
+                        </Text>
+                      </Flex>
+                    </Card>
+                  )))}
+              {!posts ||
+                (posts.length === 0 && (
+                  <Flex
+                    vertical
+                    justify="center"
+                    align="center"
+                    className="m-1 my-8 h-full"
+                  >
+                    <Title level={4}> No Posts Found </Title>
+                  </Flex>
+                ))}
+            </div>
+          )}
         </Flex>
 
         <Pagination
           className="my-8"
-          defaultCurrent={1}
+          current={page}
           onChange={onChangePage}
-          total={100}
+          total={totalPost}
         />
       </Flex>
     </>

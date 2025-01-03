@@ -16,6 +16,9 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "prepare": "husky"
   },
+  "hooks": {
+    "pre-commit": "pnpm run lint && pnpm run lint:fix && pnpm run format:check && pnpm run format:write"
+  },
   "dependencies": {
     "@ant-design/icons": "^5.5.2",
     "@t3-oss/env-nextjs": "^0.10.1",
