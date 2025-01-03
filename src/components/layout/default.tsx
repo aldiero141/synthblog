@@ -1,7 +1,6 @@
 import Header from "../header";
 import Footer from "../footer";
 import { Flex, Layout, theme } from "antd";
-import MyApp from "~/pages/_app";
 const { Content } = Layout;
 
 export default function DefaultLayout({ children }: React.PropsWithChildren) {

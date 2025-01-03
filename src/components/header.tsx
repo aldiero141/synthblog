@@ -1,40 +1,23 @@
-import { DownOutlined, LogoutOutlined } from "@ant-design/icons";
+import { LogoutOutlined } from "@ant-design/icons";
 import {
   Layout,
   Typography,
   Flex,
   theme,
   Dropdown,
-  Space,
   type MenuProps,
+  message,
 } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import type { IUserCredentials } from "~/models/component";
 import { UserState } from "~/store/user";
+import axiosInstance from "~/utils/axios";
 
 const { Header } = Layout;
 const { Title, Text } = Typography;
-
-const items: MenuProps["items"] = [
-  {
-    key: "1",
-    label: (
-      <Flex gap={8} align="center">
-        <LogoutOutlined className="text-red-500" />
-        <Text type="danger" onClick={() => logOut()}>
-          Log Out
-        </Text>
-      </Flex>
-    ),
-  },
-];
-
-const logOut = () => {
-  localStorage.clear();
-  window.location.href = "/";
-};
 
 export default function header() {
   const { data: userCredential } = UserState();
@@ -44,20 +27,62 @@ export default function header() {
     token: { colorBgContainer },
   } = theme.useToken();
 
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      label: (
+        <Flex gap={8} align="center">
+          <LogoutOutlined className="text-red-500" />
+          <Text type="danger" onClick={() => logOut()}>
+            Log Out
+          </Text>
+        </Flex>
+      ),
+    },
+  ];
+
+  const logOut = () => {
+    mutationDeletePost.mutate();
+  };
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [userId, setUserId] = useState<number>(0);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const mutationDeletePost = useMutation({
+    mutationKey: ["delete-user"],
+    mutationFn: () => {
+      return axiosInstance
+        .delete(`/users/${String(userId)}`)
+        .then(() => {
+          localStorage.clear();
+          window.location.href = "/";
+        })
+        .catch((error) => {
+          return message.error(`Error: ${error}`);
+        })
+        .finally(() => {
+          message.success(`Logout success!`);
+        });
+    },
+  });
+
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [name, setName] = useState<string>("User");
+
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     const userStorage = localStorage.getItem("user");
     const localStorageUser = JSON.parse(
       userStorage ? userStorage : "{}",
     ) as IUserCredentials;
-    if (userCredential?.name) return setName(userCredential?.name);
-    if (localStorageUser?.token) return setName(localStorageUser?.name);
+    if (userCredential?.name) setName(userCredential?.name);
+    if (localStorageUser?.token) setName(localStorageUser?.name);
+    if (localStorageUser?.id) setUserId(localStorageUser?.id);
   }, []);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    if (userCredential?.name) return setName(userCredential?.name);
+    if (userCredential?.name) setName(userCredential?.name);
+    if (userCredential?.id) setUserId(userCredential?.id);
   }, [userCredential]);
 
   return (
@@ -78,7 +103,7 @@ export default function header() {
             alt="Picture of the author"
           />
 
-          <Title level={4} style={{ margin: 0 }}>
+          <Title data-testid="cy-header-title" level={4} style={{ margin: 0 }}>
             SynthBlog
           </Title>
         </Flex>

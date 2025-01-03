@@ -7,7 +7,7 @@ import {
   Input,
   Pagination,
 } from "antd";
-import { dummyPostData, dummyUser } from "~/utils/dummy";
+import { dummyPostData } from "~/utils/dummy";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
@@ -16,7 +16,7 @@ import type { GetProps } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "~/utils/axios";
 import { UserState } from "~/store/user";
-import type { ICreatePostValues, IPost } from "../models/post";
+import type { IPost } from "../models/post";
 
 const { Title, Text } = Typography;
 
@@ -71,7 +71,7 @@ export default function Posts() {
   };
 
   // Search
-  const onSearch: SearchProps["onSearch"] = (value, _e, info) => {
+  const onSearch: SearchProps["onSearch"] = (value, _e) => {
     setQ(value);
     setPage(1);
     setPerPage(10);
@@ -97,13 +97,16 @@ export default function Posts() {
 
   return (
     <>
-      <CreateUpdatePost
-        key="create-dialog"
-        type="create"
-        open={openCreatePost}
-        onConfirm={() => onConfirmCreatePost()}
-        onCancel={() => setOpenCreatePost(false)}
-      />
+      {openCreatePost && (
+        <CreateUpdatePost
+          key="create-dialog"
+          type="create"
+          open={openCreatePost}
+          onConfirm={() => onConfirmCreatePost()}
+          onCancel={() => setOpenCreatePost(false)}
+        />
+      )}
+
       <Flex vertical justify="center" align="center" className="m-1 h-full">
         <Title style={{ margin: "0, 1em" }}> Home </Title>
 

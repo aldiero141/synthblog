@@ -25,7 +25,7 @@ const { Title, Paragraph } = Typography;
 
 export default function WelcomeDialog(props: IConfirmationProps) {
   const [form] = Form.useForm();
-  const { setData } = UserState();
+  const { data, setData } = UserState();
 
   const mutationCreatePost = useMutation({
     mutationKey: ["create-user"],
@@ -44,6 +44,7 @@ export default function WelcomeDialog(props: IConfirmationProps) {
           } as IUserCredentials;
           localStorage.setItem("user", JSON.stringify(userData));
           setData(userData);
+          console.log(data, userData);
         })
         .catch((error) => {
           return message.error(`Error: ${error}`);
@@ -130,7 +131,7 @@ export default function WelcomeDialog(props: IConfirmationProps) {
           <Form.Item
             name="email"
             label="Email"
-            rules={[{ required: true }, { min: 2 }]}
+            rules={[{ required: true, type: "email" }]}
           >
             <Input placeholder="Please enter your email" />
           </Form.Item>
