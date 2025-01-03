@@ -2,6 +2,10 @@
 import { Modal, Button, Form, Input, message } from "antd";
 // import { useEffect } from "react";
 import type { ICreatePostProps } from "~/models/component";
+import { ICreatePostValues } from "~/models/post";
+import { useMutation } from "@tanstack/react-query";
+import axiosInstance from "~/utils/axios";
+import { dummyUser } from "~/utils/dummy";
 
 const validateMessages = {
   required: "${label} is required!",
@@ -19,31 +23,43 @@ const validateMessages = {
 
 const { TextArea } = Input;
 
-interface IFormValues {
-  name: string;
-  token: string;
-}
 export default function CreateUpdatePost(props: ICreatePostProps) {
   const [form] = Form.useForm();
 
-  const onFinish = (values: IFormValues) => {
+  const mutationCreatePost = useMutation({
+    mutationKey: ["create-post"],
+    mutationFn: (value: ICreatePostValues) => {
+      return axiosInstance
+        .post("/posts", {
+          user: dummyUser.name,
+          user_id: dummyUser.id,
+          title: value.title,
+          body: value.body,
+        })
+        .catch((error) => {
+          return message.error(`Error: ${error}`);
+        });
+    },
+  });
+
+  const onFinish = (values: ICreatePostValues) => {
     return props.type === "create"
       ? onCreatePost(values)
       : onUpdatePost(values);
   };
 
-  const onCreatePost = (values: IFormValues) => {
+  const onCreatePost = (values: ICreatePostValues) => {
     message.success(`Create post success!`);
-    console.log(values);
+    mutationCreatePost.mutate(values);
     onResetField();
-    return props.onConfirm();
+    return props.onConfirm(values);
   };
 
-  const onUpdatePost = (values: IFormValues) => {
+  const onUpdatePost = (values: ICreatePostValues) => {
     message.success(`Update post success!`);
     console.log(values);
     onResetField();
-    return props.onConfirm();
+    return props.onConfirm(values);
   };
 
   const onResetField = () => {
@@ -68,47 +84,45 @@ export default function CreateUpdatePost(props: ICreatePostProps) {
   // }, []);
 
   return (
-    <>
-      <Modal
-        open={props.open}
-        onCancel={props.onCancel}
-        footer={[
-          <Button form="create-update-form" key="submit" htmlType="submit">
-            {props.type === "create" ? "Create" : "Update"}
-          </Button>,
-        ]}
-        title="Create Post"
+    <Modal
+      open={props.open}
+      onCancel={props.onCancel}
+      footer={[
+        <Button form="create-update-form" key="submit" htmlType="submit">
+          {props.type === "create" ? "Create" : "Update"}
+        </Button>,
+      ]}
+      title="Create Post"
+    >
+      <Form
+        form={form}
+        id="create-update-form"
+        layout="vertical"
+        autoComplete="off"
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        validateMessages={validateMessages}
       >
-        <Form
-          form={form}
-          id="create-update-form"
-          layout="vertical"
-          autoComplete="off"
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          validateMessages={validateMessages}
+        <Form.Item
+          name="title"
+          label="Title"
+          rules={[{ required: true }, { pattern: /^[a-zA-Z ]*$/ }]}
         >
-          <Form.Item
-            name="title"
-            label="Title"
-            rules={[{ required: true }, { pattern: /^[a-zA-Z ]*$/ }]}
-          >
-            <Input />
-          </Form.Item>
+          <Input />
+        </Form.Item>
 
-          <Form.Item
-            name="body"
-            label="Body"
-            rules={[
-              { required: true },
-              { pattern: /^[a-zA-Z0-9 ]*$/ },
-              { min: 2 },
-            ]}
-          >
-            <TextArea rows={4} />
-          </Form.Item>
-        </Form>
-      </Modal>
-    </>
+        <Form.Item
+          name="body"
+          label="Body"
+          rules={[
+            { required: true },
+            { pattern: /^[a-zA-Z0-9 ]*$/ },
+            { min: 2 },
+          ]}
+        >
+          <TextArea rows={4} />
+        </Form.Item>
+      </Form>
+    </Modal>
   );
 }

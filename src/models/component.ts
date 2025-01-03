@@ -1,3 +1,5 @@
+import { ICreatePostValues } from "./post";
+
 export interface IConfirmationProps {
     open: boolean;
     onConfirm: () => void;
@@ -8,7 +10,7 @@ export interface IConfirmationProps {
 export interface ICreatePostProps {
     open: boolean;
     type: string;
-    onConfirm: () => void;
+    onConfirm: (e: ICreatePostValues) => void;
     onCancel?: () => void;
     children?: React.ReactNode;
 }

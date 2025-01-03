@@ -7,16 +7,16 @@ import {
   Input,
   Pagination,
 } from "antd";
-import { dummyPostData } from "~/utils/dummy";
+import { dummyPostData, dummyUser } from "~/utils/dummy";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import CreatePost from "~/components/Dialog/CreateUpdatePost";
+import CreateUpdatePost from "~/components/Dialog/CreateUpdatePost";
 import type { GetProps } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "~/utils/axios";
 import { UserState } from "~/store/user";
-import type { IPost } from "../models/post";
+import type { ICreatePostValues, IPost } from "../models/post";
 
 const { Title, Text } = Typography;
 
@@ -33,7 +33,11 @@ export default function Posts() {
   const [q, setQ] = useState<string>("");
   const [totalPost, setTotalPost] = useState<number>(100);
 
-  const { data: posts, isLoading } = useQuery({
+  const {
+    data: posts,
+    isLoading: isLoadingPosts,
+    refetch: refetchPosts,
+  } = useQuery({
     queryKey: ["posts", page, perPage, q],
     queryFn: async () => {
       const data = await axiosInstance
@@ -54,6 +58,11 @@ export default function Posts() {
   });
 
   const [openCreatePost, setOpenCreatePost] = useState<boolean>(false);
+
+  const onConfirmCreatePost = async () => {
+    setOpenCreatePost(false);
+    await refetchPosts();
+  };
 
   const onChangePage = (currPage: number, pageSize: number) => {
     setPage(page);
@@ -83,11 +92,11 @@ export default function Posts() {
 
   return (
     <>
-      <CreatePost
+      <CreateUpdatePost
         key="create-dialog"
         type="create"
         open={openCreatePost}
-        onConfirm={() => setOpenCreatePost(false)}
+        onConfirm={() => onConfirmCreatePost}
         onCancel={() => setOpenCreatePost(false)}
       />
       <Flex vertical justify="center" align="center" className="m-1 h-full">
@@ -106,15 +115,15 @@ export default function Posts() {
             </Button>
           </Flex>
 
-          {isLoading &&
+          {isLoadingPosts &&
             dummyPostData.map((post) => (
               <Card className="post-card" key={post.id}>
                 <Skeleton paragraph={{ rows: 6 }} />
               </Card>
             ))}
 
-          {!isLoading && (
-            <div>
+          {!isLoadingPosts && (
+            <>
               {!posts ||
                 (posts.length > 0 &&
                   posts.map((post) => (
@@ -144,7 +153,7 @@ export default function Posts() {
                     <Title level={4}> No Posts Found </Title>
                   </Flex>
                 ))}
-            </div>
+            </>
           )}
         </Flex>
 

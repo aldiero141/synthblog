@@ -71,12 +71,13 @@ export const dummyPostDetail = {
 }
 
 export const dummyUser = {
-  id: 6945143,
-  name: "Amb. Bishnu Naik",
-  email: "naik_amb_bishnu@krajcik-breitenberg.test",
-  gender: "female",
-  status: "inactive"
+  id: 7609088,
+  name: "Bhooshit Guha Sr.",
+  email: "sr_guha_bhooshit@rodriguez.test",
+  gender: "male",
+  status: "active"
 }
+
 
 export const dummyComments = [
   {

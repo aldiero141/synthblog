@@ -8,7 +8,7 @@ import { EditOutlined, DeleteOutlined, LeftOutlined } from "@ant-design/icons";
 import CreateUpdatePost from "~/components/Dialog/CreateUpdatePost";
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "~/utils/axios";
-import { IComment, IPost, IUser } from "~/models/post";
+import type { IComment, IPost, IUser } from "~/models/post";
 
 const { Title, Text } = Typography;
 

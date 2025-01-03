@@ -20,3 +20,8 @@ export interface IComment {
   email: string
   body: string
 }
+
+export interface ICreatePostValues {
+  title: string;
+  body: string;
+}
