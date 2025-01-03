@@ -1,4 +1,13 @@
-import { Layout, Typography, Flex, theme } from "antd";
+import { DownOutlined, LogoutOutlined } from "@ant-design/icons";
+import {
+  Layout,
+  Typography,
+  Flex,
+  theme,
+  Dropdown,
+  Space,
+  type MenuProps,
+} from "antd";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -7,6 +16,25 @@ import { UserState } from "~/store/user";
 
 const { Header } = Layout;
 const { Title, Text } = Typography;
+
+const items: MenuProps["items"] = [
+  {
+    key: "1",
+    label: (
+      <Flex gap={8} align="center">
+        <LogoutOutlined className="text-red-500" />
+        <Text type="danger" onClick={() => logOut()}>
+          Log Out
+        </Text>
+      </Flex>
+    ),
+  },
+];
+
+const logOut = () => {
+  localStorage.clear();
+  window.location.href = "/";
+};
 
 export default function header() {
   const { data: userCredential } = UserState();
@@ -56,7 +84,11 @@ export default function header() {
         </Flex>
 
         <Flex align="center">
-          <Text>Welcome, {name}!</Text>
+          <Dropdown menu={{ items }}>
+            <Text>
+              <a onClick={(e) => e.preventDefault()}>Welcome, {name} !</a>
+            </Text>
+          </Dropdown>
         </Flex>
       </Header>
     </>
