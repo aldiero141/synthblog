@@ -130,7 +130,12 @@ export default function CreateUpdatePost(props: ICreatePostProps) {
       open={props.open}
       onCancel={props.onCancel}
       footer={[
-        <Button form="create-update-form" key="submit" htmlType="submit">
+        <Button
+          data-testid="cy-create-update-submit"
+          form="create-update-form"
+          key="submit"
+          htmlType="submit"
+        >
           {props.type === "create" ? "Create" : "Update"}
         </Button>,
       ]}
@@ -148,9 +153,9 @@ export default function CreateUpdatePost(props: ICreatePostProps) {
         <Form.Item
           name="title"
           label="Title"
-          rules={[{ required: true }, { pattern: /^[a-zA-Z ]*$/ }]}
+          rules={[{ required: true }, { pattern: /^[a-zA-Z0-9.,?! ]*$/ }]}
         >
-          <Input />
+          <Input data-testid="cy-create-update-post-title" />
         </Form.Item>
 
         <Form.Item
@@ -162,7 +167,7 @@ export default function CreateUpdatePost(props: ICreatePostProps) {
             { min: 2 },
           ]}
         >
-          <TextArea rows={4} />
+          <TextArea data-testid="cy-create-update-post-body" rows={4} />
         </Form.Item>
       </Form>
     </Modal>

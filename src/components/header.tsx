@@ -31,11 +31,14 @@ export default function header() {
     {
       key: "1",
       label: (
-        <Flex gap={8} align="center">
+        <Flex
+          gap={8}
+          align="center"
+          data-testid="cy-header-logout"
+          onClick={() => logOut()}
+        >
           <LogoutOutlined className="text-red-500" />
-          <Text type="danger" onClick={() => logOut()}>
-            Log Out
-          </Text>
+          <Text type="danger">Log Out</Text>
         </Flex>
       ),
     },
@@ -111,7 +114,12 @@ export default function header() {
         <Flex align="center">
           <Dropdown menu={{ items }}>
             <Text>
-              <a onClick={(e) => e.preventDefault()}>Welcome, {name} !</a>
+              <a
+                data-testid="cy-header-user"
+                onClick={(e) => e.preventDefault()}
+              >
+                Welcome, {name} !
+              </a>
             </Text>
           </Dropdown>
         </Flex>

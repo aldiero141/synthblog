@@ -108,7 +108,9 @@ export default function Posts() {
       )}
 
       <Flex vertical justify="center" align="center" className="m-1 h-full">
-        <Title style={{ margin: "0, 1em" }}> Home </Title>
+        <Title data-testid="cy-home-title" style={{ margin: "0, 1em" }}>
+          Home
+        </Title>
 
         <Flex vertical gap={12} className="post-container">
           <Flex justify="space-between" gap={16}>
@@ -121,6 +123,7 @@ export default function Posts() {
             <Button
               className="self-end"
               icon={<FormOutlined />}
+              data-testid="cy-home-create-post"
               onClick={() => setOpenCreatePost(true)}
             >
               Create Post
