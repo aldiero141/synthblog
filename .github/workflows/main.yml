@@ -22,8 +22,8 @@ jobs:
         with:
           node-version: '16'
       - name: install
-        run: pnpm install
+        run: npm install
       - name: ESLint
-        run: pnpm run lint.
+        run: npm run lint.
       - name: Prettier
-        run: pnpm format:write.
+        run: npm format:write.
