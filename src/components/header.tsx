@@ -2,7 +2,7 @@ import { Layout, Typography, Flex, theme } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { IUserCredentials } from "~/models/component";
+import type { IUserCredentials } from "~/models/component";
 import { UserState } from "~/store/user";
 
 const { Header } = Layout;

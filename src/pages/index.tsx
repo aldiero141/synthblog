@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import WelcomeDialog from "~/components/Dialog/WelcomeDialog";
 import Posts from "~/components/posts";
-import { IUserCredentials } from "~/models/component";
+import type { IUserCredentials } from "~/models/component";
 import { UserState } from "~/store/user";
 
 export default function Home() {
