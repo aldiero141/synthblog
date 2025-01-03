@@ -7,4 +7,5 @@ export const UserState = createGlobalStore<IUserCredentials>('user', {
     gender: '', 
     status: '',
     token: '',
+    id: 0,
 })

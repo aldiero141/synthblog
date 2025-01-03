@@ -95,10 +95,11 @@ export default function DetailsPage() {
   return (
     <>
       <CreateUpdatePost
+        key="update-dialog"
         type="update"
         open={openUpdateDialog}
         details={postsDetails}
-        onConfirm={() => onUpdatePost}
+        onConfirm={async () => await onUpdatePost()}
         onCancel={() => setOpenUpdateDialog(false)}
       />
 
@@ -137,7 +138,7 @@ export default function DetailsPage() {
             className="post-container w-full rounded border border-slate-300 px-8 py-4"
           >
             {isLoadingDetails && <Skeleton paragraph={{ rows: 7 }} />}
-            {!isLoadingDetails && (
+            {!isLoadingDetails && postsDetails && (
               <>
                 <Flex
                   justify="space-between"

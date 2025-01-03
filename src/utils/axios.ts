@@ -43,13 +43,16 @@ axiosInstance.interceptors.response.use(
     if (error.response?.status === 401) {
       // console.warn('Unauthorized! Redirecting to login...');
       // Logic to redirect to login or refresh token
-      window.location.href = '/401';
+      // window.location.href = '/401';
+      return
     }
     if (error.response?.status === 404  ) {
-      window.location.href = '/404';
+      // window.location.href = '/404';
+      return
     }
     if (error.response?.status === 422  ) {
-      window.location.href = '/422';
+      // window.location.href = '/422';
+      return
     }
     localStorage.clear();
     console.error('Response error', error);

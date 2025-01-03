@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Modal, Typography, Button, Form, Input, message, Radio } from "antd";
 import { useEffect } from "react";
 import type { IConfirmationProps, IUserCredentials } from "~/models/component";
-import { ICreateUserValues } from "~/models/post";
+import type { ICreateUserValues } from "~/models/post";
 import { UserState } from "~/store/user";
 import axiosInstance from "~/utils/axios";
 
@@ -38,7 +38,12 @@ export default function WelcomeDialog(props: IConfirmationProps) {
           status: "active",
         })
         .then((response) => {
-          localStorage.setItem("user", JSON.stringify(response.data));
+          const userData = {
+            ...response.data,
+            token: value.token,
+          } as IUserCredentials;
+          localStorage.setItem("user", JSON.stringify(userData));
+          setData(userData);
         })
         .catch((error) => {
           return message.error(`Error: ${error}`);
@@ -52,7 +57,6 @@ export default function WelcomeDialog(props: IConfirmationProps) {
   });
 
   const onFinish = (values: IUserCredentials) => {
-    setData(values);
     localStorage.setItem("user", JSON.stringify(values));
     mutationCreatePost.mutate(values);
     props.onConfirm();

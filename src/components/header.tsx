@@ -1,18 +1,36 @@
 import { Layout, Typography, Flex, theme } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { IUserCredentials } from "~/models/component";
 import { UserState } from "~/store/user";
 
 const { Header } = Layout;
 const { Title, Text } = Typography;
 
 export default function header() {
-  const { data } = UserState();
+  const { data: userCredential } = UserState();
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const router = useRouter();
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [name, setName] = useState<string>("User");
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    const userStorage = localStorage.getItem("user");
+    const localStorageUser = JSON.parse(
+      userStorage ? userStorage : "{}",
+    ) as IUserCredentials;
+    if (userCredential?.name) return setName(userCredential?.name);
+    if (localStorageUser?.token) return setName(localStorageUser?.name);
+  }, []);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    if (userCredential?.name) return setName(userCredential?.name);
+  }, [userCredential]);
 
   return (
     <>
@@ -38,7 +56,7 @@ export default function header() {
         </Flex>
 
         <Flex align="center">
-          <Text>Welcome, {data?.name ? data?.name : "User"}!</Text>
+          <Text>Welcome, {name}!</Text>
         </Flex>
       </Header>
     </>

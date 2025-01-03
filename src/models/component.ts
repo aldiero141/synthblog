@@ -22,4 +22,5 @@ export interface IUserCredentials {
     gender: string
     status: string
     token: string;
+    id?: number;
   }

@@ -90,13 +90,18 @@ export default function Posts() {
     }
   }, [searchParams]);
 
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    refetchPosts();
+  }, [q]);
+
   return (
     <>
       <CreateUpdatePost
         key="create-dialog"
         type="create"
         open={openCreatePost}
-        onConfirm={() => onConfirmCreatePost}
+        onConfirm={() => onConfirmCreatePost()}
         onCancel={() => setOpenCreatePost(false)}
       />
       <Flex vertical justify="center" align="center" className="m-1 h-full">
@@ -104,7 +109,11 @@ export default function Posts() {
 
         <Flex vertical gap={12} className="post-container">
           <Flex justify="space-between" gap={16}>
-            <Search placeholder="Search..." onSearch={onSearch} allowClear />
+            <Search
+              placeholder="Search Post Title..."
+              onSearch={onSearch}
+              allowClear
+            />
 
             <Button
               className="self-end"
