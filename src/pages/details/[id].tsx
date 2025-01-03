@@ -33,7 +33,7 @@ export default function DetailsPage() {
     enabled: !!postId,
   });
 
-  const { data: comments, isLoading: isLoadingComment } = useQuery({
+  const { data: comments } = useQuery({
     queryKey: ["comments", postId],
     queryFn: async () => {
       const data = await axiosInstance
@@ -46,7 +46,7 @@ export default function DetailsPage() {
     enabled: !!postId,
   });
 
-  const { data: poster, isLoading: isLoadingPoster } = useQuery({
+  const { data: poster } = useQuery({
     queryKey: ["poster", postsDetails?.user_id],
     queryFn: async () => {
       try {
@@ -58,6 +58,7 @@ export default function DetailsPage() {
         return data;
       } catch (error) {
         message.error(`Error: poster's user details not found!`);
+        console.error(error);
       }
     },
     enabled: !!postsDetails?.user_id,

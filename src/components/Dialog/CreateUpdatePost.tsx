@@ -1,7 +1,7 @@
 "use client";
 import { Modal, Button, Form, Input, message } from "antd";
 import type { ICreatePostProps, IUserCredentials } from "~/models/component";
-import type { ICreatePostValues, IUser } from "~/models/post";
+import type { ICreatePostValues } from "~/models/post";
 import { useMutation } from "@tanstack/react-query";
 import axiosInstance from "~/utils/axios";
 import { useRouter } from "next/router";
@@ -114,13 +114,13 @@ export default function CreateUpdatePost(props: ICreatePostProps) {
     const localStorageUser = JSON.parse(
       userStorage ? userStorage : "{}",
     ) as IUserCredentials;
-    if (user?.name && user?.id) {
-      setUserName(user.name);
-      setUserId(user?.id);
-      return;
-    } else if (localStorageUser.name && localStorageUser.id) {
+    if (localStorageUser.name && localStorageUser.id) {
       setUserName(localStorageUser.name);
       setUserId(localStorageUser.id);
+      return;
+    } else if (user?.name && user?.id) {
+      setUserName(user.name);
+      setUserId(user?.id);
       return;
     }
   }, []);

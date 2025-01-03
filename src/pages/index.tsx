@@ -34,7 +34,7 @@ export default function Home() {
           }}
         />
 
-        <Posts />
+        {!openWelcomeDialog && <Posts />}
       </div>
     </>
   );
