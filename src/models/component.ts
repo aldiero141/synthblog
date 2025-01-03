@@ -18,5 +18,8 @@ export interface ICreatePostProps {
 
 export interface IUserCredentials {
     name: string;
+    email: string;
+    gender: string
+    status: string
     token: string;
   }

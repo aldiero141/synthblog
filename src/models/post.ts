@@ -25,3 +25,11 @@ export interface ICreatePostValues {
   title: string;
   body: string;
 }
+
+export interface ICreateUserValues {
+  name: string;
+  email: string;
+  gender: string;
+  status: string;
+  token: string;
+}

@@ -1,8 +1,11 @@
 "use client";
-import { Modal, Typography, Button, Form, Input, message } from "antd";
+import { useMutation } from "@tanstack/react-query";
+import { Modal, Typography, Button, Form, Input, message, Radio } from "antd";
 import { useEffect } from "react";
 import type { IConfirmationProps, IUserCredentials } from "~/models/component";
+import { ICreateUserValues } from "~/models/post";
 import { UserState } from "~/store/user";
+import axiosInstance from "~/utils/axios";
 
 const validateMessages = {
   required: "${label} is required!",
@@ -24,11 +27,34 @@ export default function WelcomeDialog(props: IConfirmationProps) {
   const [form] = Form.useForm();
   const { setData } = UserState();
 
+  const mutationCreatePost = useMutation({
+    mutationKey: ["create-user"],
+    mutationFn: (value: ICreateUserValues) => {
+      return axiosInstance
+        .post("/users", {
+          name: value.name,
+          email: value.email,
+          gender: value.gender,
+          status: "active",
+        })
+        .then((response) => {
+          localStorage.setItem("user", JSON.stringify(response.data));
+        })
+        .catch((error) => {
+          return message.error(`Error: ${error}`);
+        })
+        .finally(() => {
+          message.success(`Create user success!`);
+          onResetField();
+          props.onConfirm();
+        });
+    },
+  });
+
   const onFinish = (values: IUserCredentials) => {
     setData(values);
     localStorage.setItem("user", JSON.stringify(values));
-
-    message.success(`Login success! Welcome ${values.name}!!`);
+    mutationCreatePost.mutate(values);
     props.onConfirm();
   };
 
@@ -36,10 +62,22 @@ export default function WelcomeDialog(props: IConfirmationProps) {
     message.error(`Please check your input!`);
   };
 
+  const onResetField = () => {
+    form.setFieldsValue({
+      name: "",
+      gender: "",
+      email: "",
+      token: "",
+    });
+    form.resetFields();
+  };
+
   // TODO: Remove this later
   useEffect(() => {
     form.setFieldsValue({
-      name: "name",
+      name: "matcha latte",
+      gender: "male",
+      email: "matchalatte@email.com",
       token: "8a347337330e9f0373e9743af5dbbe6e0063e2916e2c57422e33ffc336b4b748",
     });
   }, []);
@@ -87,12 +125,27 @@ export default function WelcomeDialog(props: IConfirmationProps) {
           </Form.Item>
 
           <Form.Item
+            name="email"
+            label="Email"
+            rules={[{ required: true }, { min: 2 }]}
+          >
+            <Input placeholder="Please enter your email" />
+          </Form.Item>
+
+          <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
+            <Radio.Group>
+              <Radio value={"male"}>Male</Radio>
+              <Radio value={"female"}>Female</Radio>
+            </Radio.Group>
+          </Form.Item>
+
+          <Form.Item
             name="token"
             label="Go Rest Token"
             rules={[
               { required: true },
               { pattern: /^[a-zA-Z0-9 ]*$/ },
-              { min: 2 },
+              { min: 16 },
             ]}
           >
             <Input placeholder="Please enter your go rest token" />

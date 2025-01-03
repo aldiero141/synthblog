@@ -46,7 +46,10 @@ axiosInstance.interceptors.response.use(
       window.location.href = '/401';
     }
     if (error.response?.status === 404  ) {
-      return
+      window.location.href = '/404';
+    }
+    if (error.response?.status === 422  ) {
+      window.location.href = '/422';
     }
     localStorage.clear();
     console.error('Response error', error);
