@@ -17,7 +17,7 @@
     "prepare": "husky"
   },
   "hooks": {
-    "pre-commit": "pnpm run lint && pnpm run lint:fix && pnpm run format:check && pnpm run format:write"
+    "pre-commit": "pnpm run lint:fix && pnpm run lint && pnpm run format:check && pnpm run format:write"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.2",

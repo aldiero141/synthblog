@@ -1,12 +1,11 @@
 import React from "react";
 import Confirmation from "~/components/Dialog/Confirmation";
 import { useState } from "react";
-import { Typography, Flex, Button, message } from "antd";
+import { Typography, Flex, Button, message, Skeleton } from "antd";
 import { useRouter } from "next/router";
-import { dummyPostDetail, dummyUser, dummyComments } from "~/utils/dummy";
 import { EditOutlined, DeleteOutlined, LeftOutlined } from "@ant-design/icons";
 import CreateUpdatePost from "~/components/Dialog/CreateUpdatePost";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axiosInstance from "~/utils/axios";
 import type { IComment, IPost, IUser } from "~/models/post";
 
@@ -17,7 +16,11 @@ export default function DetailsPage() {
   const router = useRouter();
   const postId = router.query.id;
 
-  const { data: postsDetails, isLoading: isLoadingDetails } = useQuery({
+  const {
+    data: postsDetails,
+    isLoading: isLoadingDetails,
+    refetch: refetchDetails,
+  } = useQuery({
     queryKey: ["posts-details", postId],
     queryFn: async () => {
       const data = await axiosInstance
@@ -61,14 +64,32 @@ export default function DetailsPage() {
   });
 
   const [openUpdateDialog, setOpenUpdateDialog] = useState<boolean>(false);
-
-  // const [loading, setLoading] = useState<boolean>(true);
   const [openConfirmationDialog, setOpenConfirmationDialog] =
     useState<boolean>(false);
+
+  const onUpdatePost = async () => {
+    setOpenUpdateDialog(false);
+    await refetchDetails();
+  };
+
+  const mutationDeletePost = useMutation({
+    mutationKey: ["delete-post"],
+    mutationFn: () => {
+      return axiosInstance
+        .delete(`/posts/${postId as string}`)
+        .catch((error) => {
+          return message.error(`Error: ${error}`);
+        })
+        .finally(() => {
+          message.success(`Delete post success!`);
+          setOpenConfirmationDialog(false);
+        });
+    },
+  });
+
   const onDeletePost = async () => {
-    message.success(`Delete post success!`);
-    setOpenConfirmationDialog(false);
-    await router.push("/");
+    mutationDeletePost.mutate();
+    return await router.push("/");
   };
 
   return (
@@ -76,7 +97,8 @@ export default function DetailsPage() {
       <CreateUpdatePost
         type="update"
         open={openUpdateDialog}
-        onConfirm={() => setOpenUpdateDialog(false)}
+        details={postsDetails}
+        onConfirm={() => onUpdatePost}
         onCancel={() => setOpenUpdateDialog(false)}
       />
 
@@ -114,28 +136,36 @@ export default function DetailsPage() {
             justify="space-between"
             className="post-container w-full rounded border border-slate-300 px-8 py-4"
           >
-            <Flex justify="space-between" className="mb-4 w-full text-center">
-              <Title level={2} className="m-0 p-0">
-                {postsDetails?.title}
-              </Title>
-            </Flex>
+            {isLoadingDetails && <Skeleton paragraph={{ rows: 7 }} />}
+            {!isLoadingDetails && (
+              <>
+                <Flex
+                  justify="space-between"
+                  className="mb-4 w-full text-center"
+                >
+                  <Title level={2} className="m-0 p-0">
+                    {postsDetails?.title}
+                  </Title>
+                </Flex>
 
-            <Text className="mb-8 ml-2 text-left">
-              Posted By{" "}
-              <b>{poster?.name ? poster?.name : postsDetails?.user_id}</b>
-            </Text>
-            <Text className="text-left">{postsDetails?.body}</Text>
+                <Text className="mb-8 ml-2 text-left">
+                  Posted By{" "}
+                  <b>{poster?.name ? poster?.name : postsDetails?.user_id}</b>
+                </Text>
+                <Text className="text-left">{postsDetails?.body}</Text>
 
-            <Flex className="mt-8 self-end" gap={16}>
-              <EditOutlined
-                className="text-xl text-blue-700"
-                onClick={() => setOpenUpdateDialog(true)}
-              />
-              <DeleteOutlined
-                className="text-xl text-red-700"
-                onClick={() => setOpenConfirmationDialog(true)}
-              />
-            </Flex>
+                <Flex className="mt-8 self-end" gap={16}>
+                  <EditOutlined
+                    className="text-xl text-blue-700"
+                    onClick={() => setOpenUpdateDialog(true)}
+                  />
+                  <DeleteOutlined
+                    className="text-xl text-red-700"
+                    onClick={() => setOpenConfirmationDialog(true)}
+                  />
+                </Flex>
+              </>
+            )}
           </Flex>
         </Flex>
 

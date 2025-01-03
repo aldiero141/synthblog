@@ -1,11 +1,12 @@
 "use client";
 import { Modal, Button, Form, Input, message } from "antd";
-// import { useEffect } from "react";
+import { useEffect } from "react";
 import type { ICreatePostProps } from "~/models/component";
-import { ICreatePostValues } from "~/models/post";
+import type { ICreatePostValues } from "~/models/post";
 import { useMutation } from "@tanstack/react-query";
 import axiosInstance from "~/utils/axios";
 import { dummyUser } from "~/utils/dummy";
+import { useRouter } from "next/router";
 
 const validateMessages = {
   required: "${label} is required!",
@@ -25,6 +26,9 @@ const { TextArea } = Input;
 
 export default function CreateUpdatePost(props: ICreatePostProps) {
   const [form] = Form.useForm();
+  const router = useRouter();
+  const postId = router.query.id;
+  const details = props.details;
 
   const mutationCreatePost = useMutation({
     mutationKey: ["create-post"],
@@ -38,6 +42,32 @@ export default function CreateUpdatePost(props: ICreatePostProps) {
         })
         .catch((error) => {
           return message.error(`Error: ${error}`);
+        })
+        .finally(() => {
+          message.success(`Create post success!`);
+          onResetField();
+          props.onConfirm();
+        });
+    },
+  });
+
+  const mutationUpdatePost = useMutation({
+    mutationKey: ["update-post"],
+    mutationFn: (value: ICreatePostValues) => {
+      return axiosInstance
+        .put(`/posts/${postId as string}`, {
+          user: dummyUser.name,
+          user_id: dummyUser.id,
+          title: value.title,
+          body: value.body,
+        })
+        .catch((error) => {
+          return message.error(`Error: ${error}`);
+        })
+        .finally(() => {
+          message.success(`Update post success!`);
+          onResetField();
+          props.onConfirm();
         });
     },
   });
@@ -49,17 +79,11 @@ export default function CreateUpdatePost(props: ICreatePostProps) {
   };
 
   const onCreatePost = (values: ICreatePostValues) => {
-    message.success(`Create post success!`);
-    mutationCreatePost.mutate(values);
-    onResetField();
-    return props.onConfirm(values);
+    return mutationCreatePost.mutate(values);
   };
 
   const onUpdatePost = (values: ICreatePostValues) => {
-    message.success(`Update post success!`);
-    console.log(values);
-    onResetField();
-    return props.onConfirm(values);
+    return mutationUpdatePost.mutate(values);
   };
 
   const onResetField = () => {
@@ -74,14 +98,14 @@ export default function CreateUpdatePost(props: ICreatePostProps) {
     message.error(`Please check your field input!`);
   };
 
-  // useEffect(() => {
-  //   if (props.type === "update") {
-  //     form.setFieldsValue({
-  //       title: "Edited Title",
-  //       body: "Edited body lorem ipsum dolor sit amet",
-  //     });
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (props.type === "update") {
+      form.setFieldsValue({
+        title: details?.title,
+        body: details?.body,
+      });
+    }
+  }, []);
 
   return (
     <Modal

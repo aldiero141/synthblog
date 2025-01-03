@@ -1,4 +1,4 @@
-import { ICreatePostValues } from "./post";
+import type { IPost } from "./post";
 
 export interface IConfirmationProps {
     open: boolean;
@@ -10,9 +10,10 @@ export interface IConfirmationProps {
 export interface ICreatePostProps {
     open: boolean;
     type: string;
-    onConfirm: (e: ICreatePostValues) => void;
+    onConfirm: () => void;
     onCancel?: () => void;
     children?: React.ReactNode;
+    details?: IPost;
 }
 
 export interface IUserCredentials {
